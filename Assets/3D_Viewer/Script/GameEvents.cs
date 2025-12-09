@@ -11,4 +11,5 @@ public class GameEvents
     public static EventHandler OnRotate180;
     public static EventHandler<ControlType> OnSetControl;
     public static ControlType controlType = ControlType.Rotate;
+    public static EventHandler<Point> OnSelectPoint;
 }

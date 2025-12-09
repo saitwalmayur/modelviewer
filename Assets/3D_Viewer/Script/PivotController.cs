@@ -42,11 +42,11 @@ public class PivotController : MonoBehaviour
                 OnPointerDown(t.position);
         }
     }
-
+    public LayerMask m_ModelLayer;
     void OnPointerDown(Vector2 screenPos)
     {
         Ray ray = Camera.main.ScreenPointToRay(screenPos);
-        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, m_ModelLayer))
         {
             if (IsChildOfModel(hit.transform))
             {

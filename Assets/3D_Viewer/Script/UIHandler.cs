@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class UIHandler : MonoBehaviour
@@ -21,10 +19,31 @@ public class UIHandler : MonoBehaviour
         _instance = this;
     }
 
-    public GuidePanel m_GuidePanel;
+    [SerializeField] private GuidePanel m_GuidePanel;
+    [SerializeField] private ModelViewer m_ModelViewer;
+    [SerializeField] private ToolsPanel m_ToolsPanel;
     public Color m_SelectionColor;
     private void OnEnable()
     {
         m_GuidePanel.gameObject.SetActive(false);
+        m_ToolsPanel.gameObject.SetActive(false);
+        m_ModelViewer.gameObject.SetActive(true);
+    }
+
+    public void ShowGuidePanel()
+    {
+        m_GuidePanel.gameObject.SetActive(true);
+    }
+
+    public void ShowToolsPanel()
+    {
+        m_ModelViewer.gameObject.SetActive(false);
+        m_GuidePanel.gameObject.SetActive(false);
+        m_ToolsPanel.gameObject.SetActive(true);
+    }
+    public void ShowViewerPanel()
+    {
+        m_ModelViewer.gameObject.SetActive(true);
+        m_ToolsPanel.gameObject.SetActive(false);
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MoveRotateControls : MonoBehaviour
 {
-    public float rotationSpeed = 200f;
+    public float rotationSpeed = 50f;
 
     private Vector3 lastMousePos;
     private bool isDragging = false;

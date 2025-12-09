@@ -32,13 +32,13 @@ public class ModelViewer : MonoBehaviour
         m_HomeButton.onClick.RemoveAllListeners();
         m_HomeButton.onClick.AddListener(()=> 
         {
-            SceneLoader.LoadScene("Home", Color.black, 1, ChangeEffect.RightToLeftFill);
+            SceneLoader.LoadScene("Home", Color.black, 2, ChangeEffect.RightToLeftFill);
         });
 
         m_ResetButton.onClick.RemoveAllListeners();
         m_ResetButton.onClick.AddListener(() =>
         {
-            SceneLoader.RestartScene( Color.black, 1, ChangeEffect.TopToBottomFill);
+            SceneLoader.RestartScene( Color.black, 2, ChangeEffect.TopToBottomFill);
         });
 
         m_Rotate180Button.onClick.RemoveAllListeners();
@@ -90,9 +90,11 @@ public class ModelViewer : MonoBehaviour
         if (index == 3)
         {
             //tools
+            UIHandler.Instance.ShowToolsPanel();
         }
         if (index == 4)
         {
+            UIHandler.Instance.ShowGuidePanel();
             //guide
         }
     }
