@@ -19,9 +19,12 @@ public class Point : MonoBehaviour
 
     private void OnMouseDown()
     {
-        isSelected = true;
-        GameEvents.OnSelectPoint?.Invoke(null,this);
-        m_MeshRenderer.material.color = Color.green;
+        if (GameManager.Instance.canSelectPoint)
+        {
+            isSelected = true;
+            GameEvents.OnSelectPoint?.Invoke(null, this);
+            m_MeshRenderer.material.color = Color.green;
+        }
     }
     private void OnDisable()
     {

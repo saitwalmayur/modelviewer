@@ -22,4 +22,16 @@ public class GameManager : MonoBehaviour
     }
 
     public bool isVertexSelection;
+    public bool canSelectPoint;
+    public MeshLineBetweenTwoPoints line1;
+    public MeshLineBetweenTwoPoints line2;
+
+    public void SetFirstLine(Transform one, Transform two)
+    {
+        line1.SetPos(one, two);
+    }
+    public void SetSecondLine(Transform one, Transform two)
+    {
+        line2.SetPos(one, two);
+    }
 }
