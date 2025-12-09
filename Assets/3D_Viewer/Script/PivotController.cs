@@ -32,17 +32,26 @@ public class PivotController : MonoBehaviour
             item.gameObject.SetActive(false);
         }
         GameEvents.OnResetTool += GameEvents_OnResetTool;
+        GameEvents.OnShowPoint += GameEvents_OnShowPoint;
     }
+
     private void OnDisable()
     {
         GameEvents.OnResetTool -= GameEvents_OnResetTool;
+        GameEvents.OnShowPoint -= GameEvents_OnShowPoint;
     }
 
     private void GameEvents_OnResetTool(object sender, SelectedTool e)
     {
         ResetPivot();
     }
-
+    private void GameEvents_OnShowPoint(object sender, EventArgs e)
+    {
+        foreach (var item in m_Point)
+        {
+            item.gameObject.SetActive(true);
+        }
+    }
     void Start()
     {
         if (modelRoot == null)
@@ -69,13 +78,13 @@ public class PivotController : MonoBehaviour
     void HandleInput()
     {
 #if UNITY_EDITOR || UNITY_STANDALONE
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && !GameManager.Instance.isVertexSelection)
         {
             OnPointerDown(Input.mousePosition);
         }
 #endif
 
-        if (Input.touchCount > 0)
+        if (Input.touchCount > 0 && !GameManager.Instance.isVertexSelection)
         {
             Touch t = Input.GetTouch(0);
             if (t.phase == TouchPhase.Ended)

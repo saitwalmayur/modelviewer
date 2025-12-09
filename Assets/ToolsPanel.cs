@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
 public enum SelectedTool
 {
     None,
@@ -23,6 +24,8 @@ public class ToolsPanel : MonoBehaviour
     [SerializeField] private CustomButton m_SelectfirstTerminalPointButtons;
     [SerializeField] private CustomButton m_SelectsecondTerminalPointButtons;
     [SerializeField] private GameObject m_MinimapCamera;
+
+    [SerializeField] private TextMeshProUGUI m_AngleIntruction;
     private void OnEnable()
     {
         m_CloseButton.onClick.RemoveAllListeners();
@@ -60,7 +63,9 @@ public class ToolsPanel : MonoBehaviour
         UpdateImage();
         GameEvents.OnSelectPoint += GameEvents_OnSelectPoint;
         GameEvents.OnResetTool += GameEvents_OnResetTool;
-
+        GameEvents.OnSelectVertexPoint += GameEvents_OnSelectVertexPoint;
+        GameEvents.OnSelect1TerminalPoint += GameEvents_OnSelect1TerminalPoint;
+        GameEvents.OnSelect2TerminalPoint += GameEvents_OnSelect2TerminalPoint;
         m_SelectVetexButtons.gameObject.SetActive(false);
         m_SelectfirstTerminalPointButtons.gameObject.SetActive(false);
         m_SelectsecondTerminalPointButtons.gameObject.SetActive(false);
@@ -72,14 +77,32 @@ public class ToolsPanel : MonoBehaviour
         m_SelectVetexButtons.m_Button.onClick.AddListener(OnClickSelectVetexButton);
         m_SelectfirstTerminalPointButtons.m_Button.onClick.AddListener(OnClickSelectfirstTerminalPointButton);
         m_SelectsecondTerminalPointButtons.m_Button.onClick.AddListener(OnClickSelectsecondTerminalPointButton);
+
+        m_AngleIntruction.gameObject.SetActive(false);
+    }
+    [SerializeField ]private LineRenderer m_AngleLine;
+    private void GameEvents_OnSelect2TerminalPoint(object sender, EventArgs e)
+    {
+        
+    }
+    private void GameEvents_OnSelect1TerminalPoint(object sender, EventArgs e)
+    {
+        
     }
     void OnClickSelectVetexButton()
     {
-      
+        m_AngleIntruction.gameObject.SetActive(true);
+        m_AngleIntruction.text = "Please select vertex point";
+        LeanTween.cancel(m_SelectVetexButtons.gameObject);
+        m_SelectVetexButtons.transform.localScale = Vector3.one;
+        GameEvents.OnShowPoint?.Invoke(null,null);
+        GameManager.Instance.isVertexSelection = true;
     }
     void OnClickSelectfirstTerminalPointButton()
     {
-
+        m_AngleIntruction.text = "Please select first terminal point";
+        LeanTween.cancel(m_SelectfirstTerminalPointButtons.gameObject);
+        m_SelectfirstTerminalPointButtons.transform.localScale = Vector3.one;
     }
     void OnClickSelectsecondTerminalPointButton()
     {
@@ -89,6 +112,16 @@ public class ToolsPanel : MonoBehaviour
     {
         GameEvents.OnSelectPoint -= GameEvents_OnSelectPoint;
         GameEvents.OnResetTool -= GameEvents_OnResetTool;
+        GameEvents.OnSelectVertexPoint -= GameEvents_OnSelectVertexPoint;
+        GameEvents.OnSelect1TerminalPoint -= GameEvents_OnSelect1TerminalPoint;
+        GameEvents.OnSelect2TerminalPoint -= GameEvents_OnSelect2TerminalPoint;
+    }
+
+    private void GameEvents_OnSelectVertexPoint(object sender, EventArgs e)
+    {
+        m_AngleIntruction.gameObject.SetActive(false);
+        m_SelectfirstTerminalPointButtons.gameObject.SetActive(true);
+        LeanTween.scale(m_SelectfirstTerminalPointButtons.gameObject, Vector3.one * 1.2f, 0.3f).setLoopPingPong();
     }
 
     private void GameEvents_OnResetTool(object sender, SelectedTool e)
@@ -147,6 +180,7 @@ public class ToolsPanel : MonoBehaviour
     {
         m_MinimapCamera.gameObject.SetActive(true);
         m_SelectVetexButtons.gameObject.SetActive(true);
+        LeanTween.scale(m_SelectVetexButtons.gameObject, Vector3.one * 1.2f, 0.3f).setLoopPingPong();
     }
     void OnClickCloseButton()
     {
@@ -167,6 +201,18 @@ public class ToolsPanel : MonoBehaviour
         if (!selectedPoints.Contains(e))
         {
             selectedPoints.Add(e);
+            if(selectedPoints.Count == 1)
+            {
+                GameEvents.OnSelectVertexPoint?.Invoke(null,null);
+            }
+            if (selectedPoints.Count == 2)
+            {
+                GameEvents.OnSelect1TerminalPoint?.Invoke(null, null);
+            }
+            if (selectedPoints.Count == 3)
+            {
+                GameEvents.OnSelect2TerminalPoint?.Invoke(null, null);
+            }
             Debug.Log("Selected: " + e.name);
         }
 
@@ -180,6 +226,7 @@ public class ToolsPanel : MonoBehaviour
 
     void CalculateAngle()
     {
+        m_AngleLine.positionCount = 3;
         Transform A = selectedPoints[0].transform;
         Transform B = selectedPoints[1].transform;
         Transform C = selectedPoints[2].transform;
@@ -188,6 +235,9 @@ public class ToolsPanel : MonoBehaviour
         Vector3 BA = A.position - B.position;
         Vector3 BC = C.position - B.position;
 
+        m_AngleLine.SetPosition(0, A.position);
+        m_AngleLine.SetPosition(1, B.position);
+        m_AngleLine.SetPosition(2, C.position);
         // Angle
         float angle = Vector3.Angle(BA, BC);
 
