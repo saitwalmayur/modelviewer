@@ -11,6 +11,13 @@ public class PivotController : MonoBehaviour
 
     public GameObject[] m_VertexPoints;
     public Point[] m_Point;
+    private void OnEnable()
+    {
+        foreach (var item in m_Point)
+        {
+            item.gameObject.SetActive(false);
+        }
+    }
     void Start()
     {
         if (modelRoot == null)

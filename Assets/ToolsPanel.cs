@@ -96,7 +96,7 @@ public class ToolsPanel : MonoBehaviour
     }
     void OnClickCloseButton()
     {
-        gameObject.SetActive(false);
+        UIHandler.Instance.ShowViewerPanel();
     }
 
     void OnClickResetButton()

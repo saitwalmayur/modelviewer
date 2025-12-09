@@ -27,11 +27,11 @@ public class Pivot : MonoBehaviour
 
     private void GameEvents_OnRotate90(object sender, EventArgs e)
     {
-        transform.localRotation *= Quaternion.Euler(90f, 0f, 0f);
+        transform.rotation *= Quaternion.Euler(90f, 0f, 0f);
     }
 
     private void GameEvents_OnRotate180(object sender, EventArgs e)
     {
-        transform.localRotation *= Quaternion.Euler(180f, 0f, 0f);
+        transform.rotation *= Quaternion.Euler(180f, 0f, 0f);
     }
 }

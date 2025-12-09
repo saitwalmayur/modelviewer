@@ -24,8 +24,8 @@ public class ModelViewer : MonoBehaviour
 
     //
     [Header("----------------")]
-    [SerializeField] private CustomButton m_AssemblyButton;
-    [SerializeField] private CustomButton m_ProjectButton;
+
+    [SerializeField] private CustomButton[] m_ViewButton;
 
     private void OnEnable()
     {
@@ -65,14 +65,32 @@ public class ModelViewer : MonoBehaviour
             m_MenuButtons[no].m_Button.onClick.RemoveAllListeners();
             m_MenuButtons[no].m_Button.onClick.AddListener(()=> { OnClicmMenuButtons(no); });
         }
+
+        for (int i = 0; i < m_ViewButton.Length; i++)
+        {
+            int no = i;
+            m_ViewButton[no].m_Button.onClick.RemoveAllListeners();
+            m_ViewButton[no].m_Button.onClick.AddListener(() => { OnClickViewButton(no); });
+        }
         UpdateImage();
 
-        m_TopLeft.gameObject.SetActive(isMenuSelected);
-        m_BottomRight.gameObject.SetActive(isMenuSelected);
-        m_BottomLeft.gameObject.SetActive(isMenuSelected);
-        OnClickMenuButton();
-    }
 
+        OnClickMenuButton(true);
+        GameEvents.OnHidePoint?.Invoke(null,null);
+
+        ///set starting details
+        OnClickViewButton(0);
+    }
+    void OnClickViewButton(int index)
+    {
+        foreach (var item in m_ViewButton)
+        {
+            item.m_Image.color = Color.white;
+        }
+        m_ViewButton[index].m_Image.color = Color.gray;
+
+        //code for switch view
+    }
     void OnClicmMenuButtons(int index)
     {
         if(index == 0)
@@ -102,22 +120,31 @@ public class ModelViewer : MonoBehaviour
     {
         isMenuSelected = !isMenuSelected;
 
-        m_TopLeft.gameObject.SetActive(isMenuSelected);
-        m_BottomRight.gameObject.SetActive(isMenuSelected);
+        OnClickMenuButton(isMenuSelected);
 
-        if(isMenuSelected)
+    }
+    void OnClickMenuButton(bool select)
+    {
+        isMenuSelected = select;
+
+        if (isMenuSelected)
         {
+            m_MenuButton.m_Image.color = Color.gray;
             LeanTween.value(m_GroupV.spacing, 10, 0.5f).setOnUpdate((val) =>
             {
-                  m_GroupV.spacing = val;
+                m_GroupV.spacing = val;
             });
             LeanTween.value(m_GroupV.padding.top, 100, 0.5f).setOnUpdate((val) =>
             {
                 m_GroupV.padding.top = (int)val;
             });
+            LeanTween.move(m_TopLeft, new Vector2(40, -20), 0.5f);
+            LeanTween.move(m_BottomRight, new Vector2(0, 30), 0.5f);
+            LeanTween.move(m_BottomLeft, new Vector2(40, 40), 0.5f);
         }
         else
         {
+            m_MenuButton.m_Image.color = Color.white;
             LeanTween.value(m_GroupV.spacing, -90, 0.5f).setOnUpdate((val) =>
             {
                 m_GroupV.spacing = val;
@@ -126,6 +153,9 @@ public class ModelViewer : MonoBehaviour
             {
                 m_GroupV.padding.top = (int)val;
             });
+            LeanTween.move(m_TopLeft, new Vector2(40, 120), 0.5f);
+            LeanTween.move(m_BottomRight, new Vector2(0, -150), 0.5f);
+            LeanTween.move(m_BottomLeft, new Vector2(40, -100), 0.5f);
         }
     }
     public Sprite m_MoveSp;
