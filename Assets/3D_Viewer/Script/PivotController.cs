@@ -78,13 +78,13 @@ public class PivotController : MonoBehaviour
     void HandleInput()
     {
 #if UNITY_EDITOR || UNITY_STANDALONE
-        if (Input.GetMouseButtonUp(0) && !GameManager.Instance.isVertexSelection)
+        if (Input.GetMouseButtonUp(0) && !GameManager.Instance.canSelectPoint)
         {
             OnPointerDown(Input.mousePosition);
         }
 #endif
 
-        if (Input.touchCount > 0 && !GameManager.Instance.isVertexSelection)
+        if (Input.touchCount > 0 && !GameManager.Instance.canSelectPoint)
         {
             Touch t = Input.GetTouch(0);
             if (t.phase == TouchPhase.Ended)

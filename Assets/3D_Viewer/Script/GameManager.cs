@@ -21,7 +21,6 @@ public class GameManager : MonoBehaviour
         _instance = this;
     }
 
-    public bool isVertexSelection;
     public bool canSelectPoint;
     public MeshLineBetweenTwoPoints line1;
     public MeshLineBetweenTwoPoints line2;

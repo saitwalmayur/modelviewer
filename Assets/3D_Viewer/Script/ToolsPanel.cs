@@ -106,7 +106,6 @@ public class ToolsPanel : MonoBehaviour
         LeanTween.cancel(m_SelectVetexButtons.gameObject);
         m_SelectVetexButtons.transform.localScale = Vector3.one;
         GameEvents.OnShowPoint?.Invoke(null,null);
-        GameManager.Instance.isVertexSelection = true;
         GameManager.Instance.canSelectPoint = true;
     }
     void OnClickSelectfirstTerminalPointButton()
@@ -210,6 +209,13 @@ public class ToolsPanel : MonoBehaviour
         selectedPoints.Clear();
         GameEvents.OnResetTool?.Invoke(null, SelectedTool.Angle);
         GameEvents.OnHidePoint.Invoke(null,null);
+        pos.Clear();
+        m_AngleLine.positionCount = 0;
+        m_SelectfirstTerminalPointButtons.gameObject.SetActive(false);
+        m_SelectsecondTerminalPointButtons.gameObject.SetActive(false);
+        m_AngleViewer.gameObject.SetActive(false);
+        GameManager.Instance.canSelectPoint = false;
+        OnClickAngleButton();
     }
 
     ///Angle Calculation;
@@ -243,21 +249,22 @@ public class ToolsPanel : MonoBehaviour
            // selectedPoints.Clear();
         }
     }
-
+    private List<Transform> pos = new List<Transform>();
     void CalculateAngle()
     {
         m_AngleLine.positionCount = 3;
         m_AngleLine.useWorldSpace = true;
         Transform A = selectedPoints[0].transform;
+        pos.Add(A);
         Transform B = selectedPoints[1].transform;
+        pos.Add(B);
         Transform C = selectedPoints[2].transform;
+        pos.Add(C);
         // Vectors
         Vector3 BA = A.position - B.position;
         Vector3 BC = C.position - B.position;
 
-        m_AngleLine.SetPosition(0, A.position);
-        m_AngleLine.SetPosition(1, B.position);
-        m_AngleLine.SetPosition(2, C.position);
+ 
         // Angle
         float angle = Vector3.Angle(BA, BC);
 
@@ -266,5 +273,15 @@ public class ToolsPanel : MonoBehaviour
         m_AngleViewer.SetAngle(angle.ToString("F2") + "\u00B0");
         m_AngleViewer.transform.SetParent(B);
     }
-   
+
+    private void Update()
+    {
+        if(pos.Count > 0)
+        {
+            for (int i = 0; i < pos.Count; i++)
+            {
+                m_AngleLine.SetPosition(i, pos[i].position);
+            }
+        }
+    }
 }

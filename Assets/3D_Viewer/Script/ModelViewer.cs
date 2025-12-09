@@ -80,6 +80,8 @@ public class ModelViewer : MonoBehaviour
 
         ///set starting details
         OnClickViewButton(0);
+
+        GameManager.Instance.canSelectPoint = false;
     }
     void OnClickViewButton(int index)
     {
