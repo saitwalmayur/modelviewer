@@ -19,4 +19,4 @@ The project is currently a **work in progress**.
 
 ## Screenshot
 
-![Fabstation UI Preview](https://raw.githubusercontent.com/username/repository/main/preview.png)
+![Fabstation  Preview](https://github.com/saitwalmayur/modelviewer/blob/main/ScreenShot-1920X1080-0.png)
