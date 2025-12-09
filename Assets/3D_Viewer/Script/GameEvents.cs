@@ -5,6 +5,14 @@ public enum ControlType
     Move,
     Rotate
 }
+public enum MinimapDir
+{
+    Top,
+    Bottom,
+    Left,
+    Right,
+    Middle
+}
 public class GameEvents
 {
     public static EventHandler OnRotate90;
@@ -19,5 +27,7 @@ public class GameEvents
     public static EventHandler OnSelectVertexPoint;
     public static EventHandler OnSelect1TerminalPoint;
     public static EventHandler OnSelect2TerminalPoint;
+
+    public static EventHandler<MinimapDir> OnSelectMiniMap;
 
 }
