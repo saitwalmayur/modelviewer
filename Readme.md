@@ -1,3 +1,6 @@
+# Build Folder contains windows build
+To test build download repo and open build folder open TestApp.exe
+
 # Fabstation Test
 
 This Unity 3D project displays 3D models with interactive controls and mesh analysis tools.  
