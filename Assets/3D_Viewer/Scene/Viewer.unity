@@ -6831,11 +6831,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c01e065a129029428bc62c372ad730b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Top: {fileID: 0}
-  m_Left: {fileID: 0}
-  m_Mid: {fileID: 0}
-  m_Right: {fileID: 0}
-  m_Bottom: {fileID: 0}
+  m_Top: {fileID: 978961255}
+  m_Left: {fileID: 1543659145}
+  m_Mid: {fileID: 2050517227}
+  m_Right: {fileID: 533542095}
+  m_Bottom: {fileID: 120857860}
 --- !u!1 &769597280
 GameObject:
   m_ObjectHideFlags: 0

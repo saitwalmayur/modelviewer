@@ -12,6 +12,7 @@ There are limited functions are working
 - Move and reposition the model
 - Calculate angle between selected mesh vertices
 - Custom UI designed specifically for a 3D model viewer
+- Scroll to zoom in out
 
 ## Technologies Used
 - Unity 3D
