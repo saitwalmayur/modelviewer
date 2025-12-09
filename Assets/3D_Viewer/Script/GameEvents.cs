@@ -13,4 +13,5 @@ public class GameEvents
     public static ControlType controlType = ControlType.Rotate;
     public static EventHandler<Point> OnSelectPoint;
     public static EventHandler OnHidePoint;
+    public static EventHandler<SelectedTool> OnResetTool;
 }

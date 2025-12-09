@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,12 +12,17 @@ public class ToolsPanel : MonoBehaviour
     [SerializeField] private Button m_CloseButton;
     [SerializeField] private Button m_ResetButton;
     [SerializeField] private CustomButton[] m_ToolsButtons;
-    public SelectedTool SelectedTool = SelectedTool.None;
+    public SelectedTool m_SelectedTool = SelectedTool.None;
     //
     [Header("----------------")]
     [SerializeField] private Button m_Rotate180Button;
     [SerializeField] private Button m_Rotate90Button;
     [SerializeField] private CustomButton m_ControlButton;
+
+    [SerializeField] private CustomButton m_SelectVetexButtons;
+    [SerializeField] private CustomButton m_SelectfirstTerminalPointButtons;
+    [SerializeField] private CustomButton m_SelectsecondTerminalPointButtons;
+    [SerializeField] private GameObject m_MinimapCamera;
     private void OnEnable()
     {
         m_CloseButton.onClick.RemoveAllListeners();
@@ -52,15 +55,59 @@ public class ToolsPanel : MonoBehaviour
             });
         }
 
+        m_MinimapCamera.gameObject.SetActive(false);
+
         UpdateImage();
         GameEvents.OnSelectPoint += GameEvents_OnSelectPoint;
+        GameEvents.OnResetTool += GameEvents_OnResetTool;
+
+        m_SelectVetexButtons.gameObject.SetActive(false);
+        m_SelectfirstTerminalPointButtons.gameObject.SetActive(false);
+        m_SelectsecondTerminalPointButtons.gameObject.SetActive(false);
+
+        m_SelectVetexButtons.m_Button.onClick.RemoveAllListeners();
+        m_SelectfirstTerminalPointButtons.m_Button.onClick.RemoveAllListeners();
+        m_SelectsecondTerminalPointButtons.m_Button.onClick.RemoveAllListeners();
+
+        m_SelectVetexButtons.m_Button.onClick.AddListener(OnClickSelectVetexButton);
+        m_SelectfirstTerminalPointButtons.m_Button.onClick.AddListener(OnClickSelectfirstTerminalPointButton);
+        m_SelectsecondTerminalPointButtons.m_Button.onClick.AddListener(OnClickSelectsecondTerminalPointButton);
+    }
+    void OnClickSelectVetexButton()
+    {
+      
+    }
+    void OnClickSelectfirstTerminalPointButton()
+    {
+
+    }
+    void OnClickSelectsecondTerminalPointButton()
+    {
+
     }
     private void OnDisable()
     {
         GameEvents.OnSelectPoint -= GameEvents_OnSelectPoint;
+        GameEvents.OnResetTool -= GameEvents_OnResetTool;
     }
 
- 
+    private void GameEvents_OnResetTool(object sender, SelectedTool e)
+    {
+        switch (m_SelectedTool)
+        {
+            case SelectedTool.None:
+                break;
+            case SelectedTool.Angle:
+                ResetAngle();
+                break;
+        }
+    }
+
+    void ResetAngle()
+    {
+
+    }
+
     public Sprite m_MoveSp;
     public Sprite m_RotateSp;
 
@@ -85,14 +132,21 @@ public class ToolsPanel : MonoBehaviour
 
     void OnClickToolsButton(int index)
     {
+        foreach (var item in m_ToolsButtons)
+        {
+            item.m_Image.color = Color.white;
+        }
+        m_ToolsButtons[index].m_Image.color = Color.gray;
         if (index == 0)
         {
-            SelectedTool = SelectedTool.Angle;
-                OnClickAngleButton();
+            m_SelectedTool = SelectedTool.Angle;
+            OnClickAngleButton();
         }
     }
     void OnClickAngleButton()
     {
+        m_MinimapCamera.gameObject.SetActive(true);
+        m_SelectVetexButtons.gameObject.SetActive(true);
     }
     void OnClickCloseButton()
     {
@@ -101,7 +155,7 @@ public class ToolsPanel : MonoBehaviour
 
     void OnClickResetButton()
     {
-        SelectedTool = SelectedTool.None;
+        GameEvents.OnResetTool?.Invoke(null, SelectedTool.Angle);
     }
 
     ///Angle Calculation;

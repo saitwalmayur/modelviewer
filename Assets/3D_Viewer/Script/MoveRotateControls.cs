@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MoveRotateControls : MonoBehaviour
 {
-    public float rotationSpeed = 50f;
+    public float rotationSpeed = 30f;
 
     private Vector3 lastMousePos;
     private bool isDragging = false;
@@ -17,6 +17,7 @@ public class MoveRotateControls : MonoBehaviour
     {
         controlType = GameEvents.controlType;
         GameEvents.OnSetControl += GameEvents_OnSetControl;
+        GameEvents.OnResetTool +=  GameEvents_OnResetTool;
     }
     private void GameEvents_OnSetControl(object sender, ControlType e)
     {
@@ -25,10 +26,18 @@ public class MoveRotateControls : MonoBehaviour
     private void OnDisable()
     {
         GameEvents.OnSetControl -= GameEvents_OnSetControl;
+        GameEvents.OnResetTool -= GameEvents_OnResetTool;
     }
+
+    private void GameEvents_OnResetTool(object sender, SelectedTool e)
+    {
+        transform.rotation = Quaternion.identity;
+    }
+
     private void OnDestroy()
     {
         GameEvents.OnSetControl -= GameEvents_OnSetControl;
+        GameEvents.OnResetTool -= GameEvents_OnResetTool;
     }
  
     void Update()

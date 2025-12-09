@@ -18,7 +18,7 @@ public class GuidePanel : MonoBehaviour
     private void OnEnable()
     {
         transform.localPosition = new Vector3(0,-2000,0);
-        LeanTween.moveLocal(gameObject, Vector3.zero, 0.5f);
+        LeanTween.moveLocal(gameObject, Vector3.zero, 0.3f);
         m_CloseButton.onClick.RemoveAllListeners();
         m_CloseButton.onClick.AddListener(OnClickClose);
         for (int i = 0; i < m_GuideDataDetails.Length; i++)

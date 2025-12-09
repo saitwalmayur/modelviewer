@@ -1,23 +1,48 @@
+﻿using System;
 using UnityEngine;
+
 public class PivotController : MonoBehaviour
 {
     [Header("References")]
-    public Transform modelRoot; 
+    public Transform modelRoot;
+
     [Header("Pivot Marker")]
-    public GameObject pivotMarkerPrefab; 
+    public GameObject pivotMarkerPrefab;
     public float markerScale = 0.02f;
-    Transform currentPivot;   
+
+    Transform currentPivot;
     GameObject currentMarker;
 
     public GameObject[] m_VertexPoints;
     public Point[] m_Point;
+    public Transform m_Model;
+
+    public LayerMask m_ModelLayer;
+    public Transform m_CurrentPivot;
+
+    // Store original parent & position for Reset
+    Transform originalModelParent;
+    Vector3 originalModelPosition;
+    Quaternion originalModelRotation;
+
     private void OnEnable()
     {
         foreach (var item in m_Point)
         {
             item.gameObject.SetActive(false);
         }
+        GameEvents.OnResetTool += GameEvents_OnResetTool;
     }
+    private void OnDisable()
+    {
+        GameEvents.OnResetTool -= GameEvents_OnResetTool;
+    }
+
+    private void GameEvents_OnResetTool(object sender, SelectedTool e)
+    {
+        ResetPivot();
+    }
+
     void Start()
     {
         if (modelRoot == null)
@@ -27,13 +52,20 @@ public class PivotController : MonoBehaviour
             return;
         }
 
+        // Save original state
+        originalModelParent = modelRoot.parent;
+        originalModelPosition = modelRoot.position;
+        originalModelRotation = modelRoot.rotation;
+
+        // Create initial default pivot
         SetPivotAtPoint(transform.position, Vector3.zero);
     }
-    
+
     void Update()
     {
         HandleInput();
     }
+
     void HandleInput()
     {
 #if UNITY_EDITOR || UNITY_STANDALONE
@@ -42,6 +74,7 @@ public class PivotController : MonoBehaviour
             OnPointerDown(Input.mousePosition);
         }
 #endif
+
         if (Input.touchCount > 0)
         {
             Touch t = Input.GetTouch(0);
@@ -49,7 +82,7 @@ public class PivotController : MonoBehaviour
                 OnPointerDown(t.position);
         }
     }
-    public LayerMask m_ModelLayer;
+
     void OnPointerDown(Vector2 screenPos)
     {
         Ray ray = Camera.main.ScreenPointToRay(screenPos);
@@ -57,40 +90,40 @@ public class PivotController : MonoBehaviour
         {
             if (IsChildOfModel(hit.transform))
             {
-                Debug.Log(hit.transform);
                 SetPivotAtPoint(hit.point, hit.normal);
             }
         }
     }
+
     bool IsChildOfModel(Transform t)
     {
         return t == modelRoot || t.IsChildOf(modelRoot);
     }
-    public Transform m_CurrentPivot;
+
     public void SetPivotAtPoint(Vector3 worldPoint, Vector3 normal)
     {
-        // 1. Unparent from previous pivot first
+        // Unparent from previous pivot
         if (currentPivot != null)
         {
-            // Move model back to original parent BEFORE setting new pivot
             modelRoot.SetParent(currentPivot.parent, true);
             Destroy(currentPivot.gameObject);
         }
 
-        // 2. Create new pivot
+        // Create new pivot
         GameObject pivotGO = new GameObject("Pivot");
         pivotGO.AddComponent<MoveRotateControls>();
+
         Transform pivotTF = pivotGO.transform;
         pivotTF.position = worldPoint;
 
-        // 3. Place pivot under the model's parent
-        Transform originalParent = modelRoot.parent;
-        pivotTF.SetParent(originalParent, true);
+        // Place pivot under original parent
+        Transform parent = modelRoot.parent != null ? modelRoot.parent : originalModelParent;
+        pivotTF.SetParent(parent, true);
 
-        // 4. Reparent model to the pivot
+        // Reparent model to pivot
         modelRoot.SetParent(pivotTF, true);
 
-        // 5. Create pivot marker
+        // Create pivot marker
         if (currentMarker != null) Destroy(currentMarker);
 
         if (pivotMarkerPrefab != null)
@@ -98,7 +131,6 @@ public class PivotController : MonoBehaviour
             currentMarker = Instantiate(pivotMarkerPrefab, pivotTF.position, Quaternion.identity);
             currentMarker.transform.localScale = Vector3.one * markerScale;
             currentMarker.transform.SetParent(pivotTF, true);
-
         }
         else
         {
@@ -109,7 +141,7 @@ public class PivotController : MonoBehaviour
             currentMarker.transform.SetParent(pivotTF, true);
         }
 
-        // 6. Store current pivot
+        // Store pivot
         currentPivot = pivotTF;
         m_CurrentPivot = pivotTF;
         m_CurrentPivot.gameObject.AddComponent<Pivot>();
@@ -119,13 +151,50 @@ public class PivotController : MonoBehaviour
     {
         if (currentPivot != null)
         {
-            modelRoot.SetParent(originalParent, true); // worldPositionStays = true
-            if (currentMarker != null) Destroy(currentMarker);
+            modelRoot.SetParent(originalParent, true);
+
+            if (currentMarker != null)
+                Destroy(currentMarker);
+
             Destroy(currentPivot.gameObject);
+
             currentPivot = null;
             currentMarker = null;
         }
     }
+
+    // -----------------------------------------
+    // 🔥 RESET PIVOT TO INITIAL STATE (NEW)
+    // -----------------------------------------
+    public void ResetPivot()
+    {
+        if (modelRoot == null)
+            return;
+
+        // 1. Remove any current pivot
+        if (currentPivot != null)
+        {
+            Transform parent = currentPivot.parent;
+            modelRoot.SetParent(parent, true);
+
+            if (currentMarker != null) Destroy(currentMarker);
+            Destroy(currentPivot.gameObject);
+
+            currentPivot = null;
+            currentMarker = null;
+        }
+
+        // 2. Restore model to its original transform
+        modelRoot.SetParent(originalModelParent, true);
+        modelRoot.position = originalModelPosition;
+        modelRoot.rotation = originalModelRotation;
+
+        // 3. Create fresh default pivot
+        SetPivotAtPoint(originalModelPosition, Vector3.zero);
+
+        Debug.Log("Pivot reset to original start position.");
+    }
+
     public Bounds GetModelBounds(GameObject modelRoot)
     {
         Renderer[] renderers = modelRoot.GetComponentsInChildren<Renderer>();
@@ -136,6 +205,4 @@ public class PivotController : MonoBehaviour
 
         return b;
     }
-
-
 }

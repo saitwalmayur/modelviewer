@@ -5,10 +5,16 @@ using UnityEngine;
 
 public class Pivot : MonoBehaviour
 {
+    private Transform m_Pivot;
     private void OnEnable()
     {
         GameEvents.OnRotate180 += GameEvents_OnRotate180;
         GameEvents.OnRotate90 += GameEvents_OnRotate90;
+
+        if(m_Pivot == null)
+        {
+            m_Pivot = GetComponentInChildren<PivotController>().m_Model;
+        }
     }
 
    
@@ -27,11 +33,11 @@ public class Pivot : MonoBehaviour
 
     private void GameEvents_OnRotate90(object sender, EventArgs e)
     {
-        transform.eulerAngles += new Vector3(90f, 0f, 0f);
+        m_Pivot.localRotation *= Quaternion.Euler(90f, 0f, 0f);
     }
 
     private void GameEvents_OnRotate180(object sender, EventArgs e)
     {
-        transform.eulerAngles += new Vector3(180f, 0f, 0f);
+        m_Pivot.localRotation *= Quaternion.Euler(180f, 0f, 0f);
     }
 }
