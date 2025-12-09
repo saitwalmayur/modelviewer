@@ -3,6 +3,8 @@
 This Unity 3D project displays 3D models with interactive controls and mesh analysis tools.  
 The project is currently a **work in progress**.
 
+There are limited functions are working
+
 ## Features
 - View and interact with 3D models
 - Rotate models using mouse drag
