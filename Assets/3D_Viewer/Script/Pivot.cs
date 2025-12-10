@@ -72,42 +72,42 @@ public class Pivot : MonoBehaviour
             case MinimapDir.Middle:
                 break;
         }
-        // Pick face by string
-        switch (side)
-        {
-            case "Left":
+        //// Pick face by string
+        //switch (side)
+        //{
+        //    case "Left":
                
-                break;
-            case "Right":
+        //        break;
+        //    case "Right":
                
-                break;
-            case "Top":
+        //        break;
+        //    case "Top":
              
-                break;
-            case "Bottom":
+        //        break;
+        //    case "Bottom":
            
-                break;
-        }
+        //        break;
+        //}
 
-        // --- Convert world position to screen ---
-        Vector3 screenPoint = cam.WorldToScreenPoint(facePos);
+        //// --- Convert world position to screen ---
+        //Vector3 screenPoint = cam.WorldToScreenPoint(facePos);
 
-        // Desired X / Y based on screen side
-        Vector3 targetScreenPoint = screenPoint;
+        //// Desired X / Y based on screen side
+        //Vector3 targetScreenPoint = screenPoint;
 
-        if (side == "Left") targetScreenPoint.x = 0;
-        if (side == "Right") targetScreenPoint.x = Screen.width;
-        if (side == "Bottom") targetScreenPoint.y = 0;
-        if (side == "Top") targetScreenPoint.y = Screen.height;
+        //if (side == "Left") targetScreenPoint.x = 0;
+        //if (side == "Right") targetScreenPoint.x = Screen.width;
+        //if (side == "Bottom") targetScreenPoint.y = 0;
+        //if (side == "Top") targetScreenPoint.y = Screen.height;
 
-        // Convert back to world
-        Vector3 targetWorldPoint = cam.ScreenToWorldPoint(targetScreenPoint);
+        //// Convert back to world
+        //Vector3 targetWorldPoint = cam.ScreenToWorldPoint(targetScreenPoint);
 
-        // Offset needed
-        Vector3 offset = targetWorldPoint - facePos;
+        //// Offset needed
+        //Vector3 offset = targetWorldPoint - facePos;
 
-        // Move whole model
-        transform.position += offset;
+        //// Move whole model
+        //transform.position += offset;
     }
     private void GameEvents_OnRotate90(object sender, EventArgs e)
     {
