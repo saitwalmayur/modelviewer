@@ -4,11 +4,9 @@ using UnityEngine;
 using TMPro;
 public class AngleViewer : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI m_AngleText;
     [SerializeField] private TextMeshPro textMesh;
     public void SetAngle(string angle)
     {
-       // m_AngleText.text = angle;
         textMesh.text = angle;
     }
     void LateUpdate()
