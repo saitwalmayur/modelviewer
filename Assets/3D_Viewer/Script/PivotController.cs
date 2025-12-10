@@ -33,6 +33,24 @@ public class PivotController : MonoBehaviour
         }
         GameEvents.OnResetTool += GameEvents_OnResetTool;
         GameEvents.OnShowPoint += GameEvents_OnShowPoint;
+        // Get ALL MeshRenderers from this object and its children
+        MeshRenderer[] renderers = GetComponentsInChildren<MeshRenderer>();
+
+        if (renderers.Length == 0) return;
+
+        // Start bounds with first renderer
+        Bounds combinedBounds = renderers[0].bounds;
+
+        // Expand bounds to include all
+        foreach (var rend in renderers)
+        {
+            combinedBounds.Encapsulate(rend.bounds);
+        }
+
+        BoxCollider boxCollider = gameObject.AddComponent<BoxCollider>();
+        boxCollider.isTrigger = true;
+        boxCollider.size = combinedBounds.size;
+        boxCollider.center = combinedBounds.center;
     }
 
     private void OnDisable()
