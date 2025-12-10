@@ -1,16 +1,17 @@
-Shader "Custom/Overlay"
+Shader "Custom/Overlay_DoubleSided"
 {
     Properties
     {
         _Color("Overlay Color", Color) = (1,1,1,0.3)
     }
 
-        SubShader
+    SubShader
     {
         Tags { "Queue" = "Overlay" "RenderType" = "Transparent" }
 
         Pass
         {
+            Cull Off                // ✅ Makes the shader double-sided
             Blend SrcAlpha OneMinusSrcAlpha
             ZWrite Off
             ZTest Always
@@ -21,11 +22,13 @@ Shader "Custom/Overlay"
 
             float4 _Color;
 
-            struct appdata {
+            struct appdata
+            {
                 float4 vertex : POSITION;
             };
 
-            struct v2f {
+            struct v2f
+            {
                 float4 pos : SV_POSITION;
             };
 

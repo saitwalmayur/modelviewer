@@ -88,7 +88,7 @@ public class ToolsPanel : MonoBehaviour
         m_SelectedTool = SelectedTool.None;
         selectedPoints.Clear();
     }
-    [SerializeField ]private LineRenderer m_AngleLine;
+    //[SerializeField ]private LineRenderer m_AngleLine;
     private void GameEvents_OnSelect2TerminalPoint(object sender, EventArgs e)
     {
         
@@ -210,7 +210,7 @@ public class ToolsPanel : MonoBehaviour
         GameEvents.OnResetTool?.Invoke(null, SelectedTool.Angle);
         GameEvents.OnHidePoint.Invoke(null,null);
         pos.Clear();
-        m_AngleLine.positionCount = 0;
+        //m_AngleLine.positionCount = 0;
         m_SelectfirstTerminalPointButtons.gameObject.SetActive(false);
         m_SelectsecondTerminalPointButtons.gameObject.SetActive(false);
         m_AngleViewer.gameObject.SetActive(false);
@@ -252,8 +252,6 @@ public class ToolsPanel : MonoBehaviour
     private List<Transform> pos = new List<Transform>();
     void CalculateAngle()
     {
-        m_AngleLine.positionCount = 3;
-        m_AngleLine.useWorldSpace = true;
         Transform A = selectedPoints[0].transform;
         pos.Add(A);
         Transform B = selectedPoints[1].transform;
@@ -264,7 +262,7 @@ public class ToolsPanel : MonoBehaviour
         Vector3 BA = A.position - B.position;
         Vector3 BC = C.position - B.position;
 
- 
+        GameManager.Instance.ShowLine(A,B,C);
         // Angle
         float angle = Vector3.Angle(BA, BC);
 
@@ -272,16 +270,5 @@ public class ToolsPanel : MonoBehaviour
         m_AngleViewer.gameObject.SetActive(true);
         m_AngleViewer.SetAngle(angle.ToString("F2") + "\u00B0");
         m_AngleViewer.transform.SetParent(B);
-    }
-
-    private void Update()
-    {
-        if(pos.Count > 0)
-        {
-            for (int i = 0; i < pos.Count; i++)
-            {
-                m_AngleLine.SetPosition(i, pos[i].position);
-            }
-        }
     }
 }

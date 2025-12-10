@@ -11,29 +11,29 @@ public class MiniMapClick : MonoBehaviour
     public Button m_Bottom;
     private void OnEnable()
     {
-        m_Top.onClick.RemoveAllListeners();
-        m_Left.onClick.RemoveAllListeners();
-        m_Mid.onClick.RemoveAllListeners();
-        m_Right.onClick.RemoveAllListeners();
-        m_Bottom.onClick.RemoveAllListeners();
+        m_Top?.onClick.RemoveAllListeners();
+        m_Left?.onClick.RemoveAllListeners();
+        m_Mid?.onClick.RemoveAllListeners();
+        m_Right?.onClick.RemoveAllListeners();
+        m_Bottom?.onClick.RemoveAllListeners();
 
-        m_Top.onClick.AddListener(() =>
+        m_Top?.onClick.AddListener(() =>
         {
             GameEvents.OnSelectMiniMap?.Invoke(null,MinimapDir.Top);
         });
-        m_Left.onClick.AddListener(() =>
+        m_Left?.onClick.AddListener(() =>
         {
             GameEvents.OnSelectMiniMap?.Invoke(null, MinimapDir.Left);
         });
-        m_Mid.onClick.AddListener(() =>
+        m_Mid?.onClick.AddListener(() =>
         {
             GameEvents.OnSelectMiniMap?.Invoke(null, MinimapDir.Middle);
         });
-        m_Right.onClick.AddListener(() =>
+        m_Right?.onClick.AddListener(() =>
         {
             GameEvents.OnSelectMiniMap?.Invoke(null, MinimapDir.Right);
         });
-        m_Bottom.onClick.AddListener(() =>
+        m_Bottom?.onClick.AddListener(() =>
         {
             GameEvents.OnSelectMiniMap?.Invoke(null, MinimapDir.Bottom);
         });

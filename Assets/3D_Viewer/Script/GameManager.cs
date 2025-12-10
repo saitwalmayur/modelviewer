@@ -22,15 +22,21 @@ public class GameManager : MonoBehaviour
     }
 
     public bool canSelectPoint;
-    public MeshLineBetweenTwoPoints line1;
-    public MeshLineBetweenTwoPoints line2;
+    public CustomCylinderBetweenTwoPoints line1;
+    public CustomCylinderBetweenTwoPoints line2;
 
-    public void SetFirstLine(Transform one, Transform two)
+    public void ShowLine(Transform one, Transform two, Transform thee)
     {
+        line1.gameObject.SetActive(true);
         line1.SetPos(one, two);
+
+        line2.gameObject.SetActive(true);
+        line2.SetPos(two, thee);
     }
-    public void SetSecondLine(Transform one, Transform two)
+
+    public void HideLine()
     {
-        line2.SetPos(one, two);
+        line1.gameObject.SetActive(false);
+        line2.gameObject.SetActive(false);
     }
 }
