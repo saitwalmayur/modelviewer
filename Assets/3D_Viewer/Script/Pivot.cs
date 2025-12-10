@@ -54,31 +54,69 @@ public class Pivot : MonoBehaviour
             center + transform.forward* extents.z,  // Front
             center - transform.forward* extents.z   // Back
         };
-       
+        Vector3 facePos = center;
         switch (e)
         {
             case MinimapDir.Right:
-                transform.position = extents + new Vector3(5, 0, 0);
+                facePos = center + transform.right * extents.x;
                 break;
             case MinimapDir.Left:
+                facePos = center - transform.right * extents.x;
                 break;
             case MinimapDir.Top:
+                facePos = center + transform.up * extents.y;
                 break;
             case MinimapDir.Bottom:
+                facePos = center - transform.up * extents.y;
                 break;
             case MinimapDir.Middle:
                 break;
         }
-    }
+        // Pick face by string
+        switch (side)
+        {
+            case "Left":
+               
+                break;
+            case "Right":
+               
+                break;
+            case "Top":
+             
+                break;
+            case "Bottom":
+           
+                break;
+        }
 
+        // --- Convert world position to screen ---
+        Vector3 screenPoint = cam.WorldToScreenPoint(facePos);
+
+        // Desired X / Y based on screen side
+        Vector3 targetScreenPoint = screenPoint;
+
+        if (side == "Left") targetScreenPoint.x = 0;
+        if (side == "Right") targetScreenPoint.x = Screen.width;
+        if (side == "Bottom") targetScreenPoint.y = 0;
+        if (side == "Top") targetScreenPoint.y = Screen.height;
+
+        // Convert back to world
+        Vector3 targetWorldPoint = cam.ScreenToWorldPoint(targetScreenPoint);
+
+        // Offset needed
+        Vector3 offset = targetWorldPoint - facePos;
+
+        // Move whole model
+        transform.position += offset;
+    }
     private void GameEvents_OnRotate90(object sender, EventArgs e)
     {
         m_Pivot.localRotation *= Quaternion.Euler(90f, 0f, 0f);
     }
-
     private void GameEvents_OnRotate180(object sender, EventArgs e)
     {
         m_Pivot.localRotation *= Quaternion.Euler(180f, 0f, 0f);
     }
 
+    
 }
