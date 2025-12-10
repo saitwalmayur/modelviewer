@@ -215,6 +215,7 @@ public class ToolsPanel : MonoBehaviour
         m_SelectsecondTerminalPointButtons.gameObject.SetActive(false);
         m_AngleViewer.gameObject.SetActive(false);
         GameManager.Instance.canSelectPoint = false;
+        GameManager.Instance.HideLine();
         OnClickAngleButton();
     }
 
@@ -262,13 +263,15 @@ public class ToolsPanel : MonoBehaviour
         Vector3 BA = A.position - B.position;
         Vector3 BC = C.position - B.position;
 
-        GameManager.Instance.ShowLine(A,B,C);
+ 
         // Angle
         float angle = Vector3.Angle(BA, BC);
-
+        GameManager.Instance.ShowLine(A, B, C,angle);
         Debug.Log($"Angle at B ({B.name}) = {angle}?");
         m_AngleViewer.gameObject.SetActive(true);
         m_AngleViewer.SetAngle(angle.ToString("F2") + "\u00B0");
         m_AngleViewer.transform.SetParent(B);
+        GameManager.Instance.CreateAngleMesh(B, BA, BC, angle);
+
     }
 }
