@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
     {
         int segments = 40;      // Higher = smoother arc
         float radius = 0.3f;   // Arc size
-
+        ArcObject.gameObject.SetActive(true);
         ArcObject.transform.SetParent(center);
         ArcObject.transform.localPosition = Vector3.zero;
 
